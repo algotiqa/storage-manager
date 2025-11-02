@@ -26,8 +26,8 @@ package inventory
 
 import (
 	"encoding/json"
-	"github.com/bit-fever/core/msg"
-	"github.com/bit-fever/storage-manager/pkg/backend"
+	"github.com/tradalia/core/msg"
+	"github.com/tradalia/storage-manager/pkg/backend"
 	"log/slog"
 )
 

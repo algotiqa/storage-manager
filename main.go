@@ -25,13 +25,13 @@ THE SOFTWARE.
 package main
 
 import (
-	"github.com/bit-fever/core/boot"
-	"github.com/bit-fever/core/msg"
-	"github.com/bit-fever/core/req"
-	"github.com/bit-fever/storage-manager/pkg/app"
-	"github.com/bit-fever/storage-manager/pkg/backend"
-	"github.com/bit-fever/storage-manager/pkg/process/messaging/inventory"
-	"github.com/bit-fever/storage-manager/pkg/service"
+	"github.com/tradalia/core/boot"
+	"github.com/tradalia/core/msg"
+	"github.com/tradalia/core/req"
+	"github.com/tradalia/storage-manager/pkg/app"
+	"github.com/tradalia/storage-manager/pkg/backend"
+	"github.com/tradalia/storage-manager/pkg/process/messaging/inventory"
+	"github.com/tradalia/storage-manager/pkg/service"
 	"log/slog"
 )
 

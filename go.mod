@@ -1,9 +1,9 @@
-module github.com/bit-fever/storage-manager
+module github.com/tradalia/storage-manager
 
 go 1.23.0
 
 require (
-	github.com/bit-fever/core v1.8.6
+	github.com/tradalia/core v1.8.6
 	github.com/gin-gonic/gin v1.10.0
 )
 

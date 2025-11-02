@@ -26,8 +26,8 @@ package backend
 
 import (
 	"encoding/json"
-	"github.com/bit-fever/core"
-	"github.com/bit-fever/storage-manager/pkg/app"
+	"github.com/tradalia/core"
+	"github.com/tradalia/storage-manager/pkg/app"
 	"os"
 	"path/filepath"
 	"strconv"
