@@ -25,8 +25,8 @@ THE SOFTWARE.
 package service
 
 import (
-	"github.com/tradalia/core/auth"
-	"github.com/tradalia/storage-manager/pkg/business"
+	"github.com/algotiqa/core/auth"
+	"github.com/algotiqa/storage-manager/pkg/business"
 )
 
 //=============================================================================
@@ -36,7 +36,7 @@ func getDocumentation(c *auth.Context) {
 
 	if err == nil {
 		var res *business.DocumentationResponse
-		res,err = business.GetDocumentation(c, tsId)
+		res, err = business.GetDocumentation(c, tsId)
 		if err == nil {
 			_ = c.ReturnObject(res)
 			return
@@ -74,7 +74,7 @@ func getEquityChart(c *auth.Context) {
 	if err == nil {
 		chartType := c.GetParamAsString("type", "unknown")
 		var data []byte
-		data,err = business.GetEquityChart(c, tsId, chartType)
+		data, err = business.GetEquityChart(c, tsId, chartType)
 		if err == nil {
 			_ = c.ReturnData("image/png", data)
 			return

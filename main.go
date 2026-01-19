@@ -25,13 +25,13 @@ THE SOFTWARE.
 package main
 
 import (
-	"github.com/tradalia/core/boot"
-	"github.com/tradalia/core/msg"
-	"github.com/tradalia/core/req"
-	"github.com/tradalia/storage-manager/pkg/app"
-	"github.com/tradalia/storage-manager/pkg/backend"
-	"github.com/tradalia/storage-manager/pkg/process/messaging/inventory"
-	"github.com/tradalia/storage-manager/pkg/service"
+	"github.com/algotiqa/core/boot"
+	"github.com/algotiqa/core/msg"
+	"github.com/algotiqa/core/req"
+	"github.com/algotiqa/storage-manager/pkg/app"
+	"github.com/algotiqa/storage-manager/pkg/backend"
+	"github.com/algotiqa/storage-manager/pkg/process/messaging/inventory"
+	"github.com/algotiqa/storage-manager/pkg/service"
 	"log/slog"
 )
 
@@ -45,7 +45,7 @@ func main() {
 	cfg := &app.Config{}
 	boot.ReadConfig(component, cfg)
 	logger := boot.InitLogger(component, &cfg.Application)
-	engine := boot.InitEngine(logger,    &cfg.Application)
+	engine := boot.InitEngine(logger, &cfg.Application)
 	initClients()
 	backend.InitStorage(cfg)
 	msg.InitMessaging(&cfg.Messaging)

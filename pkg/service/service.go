@@ -25,12 +25,13 @@ THE SOFTWARE.
 package service
 
 import (
-	"github.com/tradalia/core/auth"
-	"github.com/tradalia/core/auth/roles"
-	"github.com/tradalia/core/req"
-	"github.com/tradalia/storage-manager/pkg/app"
-	"github.com/gin-gonic/gin"
 	"log/slog"
+
+	"github.com/algotiqa/core/auth"
+	"github.com/algotiqa/core/auth/roles"
+	"github.com/algotiqa/core/req"
+	"github.com/algotiqa/storage-manager/pkg/app"
+	"github.com/gin-gonic/gin"
 )
 
 //=============================================================================
@@ -39,13 +40,12 @@ func Init(router *gin.Engine, cfg *app.Config, logger *slog.Logger) {
 
 	ctrl := auth.NewOidcController(cfg.Authentication.Authority, req.GetClient("bf"), logger, cfg)
 
-	router.GET("/api/storage/v1/trading-systems/:id/documentation",  ctrl.Secure(getDocumentation, roles.Admin_User))
-	router.PUT("/api/storage/v1/trading-systems/:id/documentation",  ctrl.Secure(setDocumentation, roles.Admin_User))
+	router.GET("/api/storage/v1/trading-systems/:id/documentation", ctrl.Secure(getDocumentation, roles.Admin_User))
+	router.PUT("/api/storage/v1/trading-systems/:id/documentation", ctrl.Secure(setDocumentation, roles.Admin_User))
 
-	router.GET   ("/api/storage/v1/trading-systems/:id/equity-chart",   ctrl.Secure(getEquityChart,     roles.Admin_User))
-	router.PUT   ("/api/storage/v1/trading-systems/:id/equity-chart",   ctrl.Secure(setEquityCharts,    roles.Service))
-	router.DELETE("/api/storage/v1/trading-systems/:id/equity-chart",   ctrl.Secure(deleteEquityCharts, roles.Service))
+	router.GET("/api/storage/v1/trading-systems/:id/equity-chart", ctrl.Secure(getEquityChart, roles.Admin_User))
+	router.PUT("/api/storage/v1/trading-systems/:id/equity-chart", ctrl.Secure(setEquityCharts, roles.Service))
+	router.DELETE("/api/storage/v1/trading-systems/:id/equity-chart", ctrl.Secure(deleteEquityCharts, roles.Service))
 }
 
 //=============================================================================
-

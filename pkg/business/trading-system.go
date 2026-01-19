@@ -25,8 +25,8 @@ THE SOFTWARE.
 package business
 
 import (
-	"github.com/tradalia/core/auth"
-	"github.com/tradalia/storage-manager/pkg/backend"
+	"github.com/algotiqa/core/auth"
+	"github.com/algotiqa/storage-manager/pkg/backend"
 )
 
 //=============================================================================
@@ -34,14 +34,14 @@ import (
 func GetDocumentation(c *auth.Context, id uint) (*DocumentationResponse, error) {
 	c.Log.Info("GetDocumentation: Getting documentation for trading system", "id", id)
 
-	doc,err := backend.GetTradingSystemDoc(c.Session.Username, id)
+	doc, err := backend.GetTradingSystemDoc(c.Session.Username, id)
 	if err != nil {
 		c.Log.Error("GetDocumentation: Cannot retrieve documentation for trading system", "id", id, "error", err)
 		return nil, err
 	}
 
 	var info *backend.TradingSystem
-	info,err = backend.GetTradingSystemInfo(c.Session.Username, id)
+	info, err = backend.GetTradingSystemInfo(c.Session.Username, id)
 	if err != nil {
 		c.Log.Error("GetDocumentation: Cannot retrieve info for trading system", "id", id, "error", err)
 		return nil, err
@@ -50,8 +50,8 @@ func GetDocumentation(c *auth.Context, id uint) (*DocumentationResponse, error) 
 	c.Log.Info("GetDocumentation: Operation complete", "id", id)
 
 	return &DocumentationResponse{
-		Id           : id,
-		Name         : info.Name,
+		Id:            id,
+		Name:          info.Name,
 		Documentation: doc,
 	}, nil
 }
@@ -89,7 +89,7 @@ func GetEquityChart(c *auth.Context, id uint, chartType string) ([]byte, error) 
 func SetEquityCharts(c *auth.Context, id uint, r *EquityRequest) error {
 	c.Log.Info("SetEquityCharts: Setting equity charts for trading system", "id", id)
 
-	for chartType,data := range r.Images {
+	for chartType, data := range r.Images {
 		err := backend.WriteEquityChart(r.Username, id, data, chartType)
 		if err != nil {
 			c.Log.Info("SetEquityCharts: Can't write equity chart", "id", id, "error", err, "type", chartType)
@@ -107,7 +107,7 @@ func SetEquityCharts(c *auth.Context, id uint, r *EquityRequest) error {
 func DeleteEquityCharts(c *auth.Context, id uint, r *EquityRequest) error {
 	c.Log.Info("DeleteEquityCharts: Delete equity chart for trading system", "id", id, "username", r.Username)
 
-	types,err := backend.GetEquityChartTypes(r.Username, id)
+	types, err := backend.GetEquityChartTypes(r.Username, id)
 	if err == nil {
 		for _, ct := range types {
 			err = backend.DeleteEquityChart(r.Username, id, ct)

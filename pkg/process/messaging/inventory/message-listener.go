@@ -26,8 +26,8 @@ package inventory
 
 import (
 	"encoding/json"
-	"github.com/tradalia/core/msg"
-	"github.com/tradalia/storage-manager/pkg/backend"
+	"github.com/algotiqa/core/msg"
+	"github.com/algotiqa/storage-manager/pkg/backend"
 	"log/slog"
 )
 
@@ -52,7 +52,7 @@ func handleMessage(m *msg.Message) bool {
 		}
 
 		if m.Type == msg.TypeCreate {
-			return addTradingSystem   (&tsm)
+			return addTradingSystem(&tsm)
 		}
 		if m.Type == msg.TypeUpdate {
 			return updateTradingSystem(&tsm)
@@ -72,9 +72,9 @@ func addTradingSystem(tsm *TradingSystemMessage) bool {
 	slog.Info("addTradingSystem: New trading system received", "id", tsm.TradingSystem.Id, "name", tsm.TradingSystem.Name)
 
 	ts := &backend.TradingSystem{
-		Id      : tsm.TradingSystem.Id,
+		Id:       tsm.TradingSystem.Id,
 		Username: tsm.TradingSystem.Username,
-		Name    : tsm.TradingSystem.Name,
+		Name:     tsm.TradingSystem.Name,
 	}
 	err := backend.AddTradingSystem(ts)
 
@@ -93,9 +93,9 @@ func updateTradingSystem(tsm *TradingSystemMessage) bool {
 	slog.Info("updateTradingSystem: Trading system change received", "id", tsm.TradingSystem.Id, "name", tsm.TradingSystem.Name)
 
 	ts := &backend.TradingSystem{
-		Id      : tsm.TradingSystem.Id,
+		Id:       tsm.TradingSystem.Id,
 		Username: tsm.TradingSystem.Username,
-		Name    : tsm.TradingSystem.Name,
+		Name:     tsm.TradingSystem.Name,
 	}
 	err := backend.UpdateTradingSystem(ts)
 

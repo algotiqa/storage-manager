@@ -26,12 +26,13 @@ package backend
 
 import (
 	"encoding/json"
-	"github.com/tradalia/core"
-	"github.com/tradalia/storage-manager/pkg/app"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/algotiqa/core"
+	"github.com/algotiqa/storage-manager/pkg/app"
 )
 
 //=============================================================================
@@ -46,11 +47,11 @@ const (
 	EquityChart = "equity-chart.png"
 )
 
-var Dirs = []string{ Code, Image, Report }
+var Dirs = []string{Code, Image, Report}
 
 //=============================================================================
 
-var folder         string
+var folder string
 var defEquityChart []byte
 
 //=============================================================================
@@ -65,7 +66,7 @@ func InitStorage(cfg *app.Config) {
 	err := os.MkdirAll(folder, 0700)
 	core.ExitIfError(err)
 
-	defEquityChart, err = os.ReadFile("default/"+ EquityChart)
+	defEquityChart, err = os.ReadFile("default/" + EquityChart)
 	core.ExitIfError(err)
 }
 
@@ -77,10 +78,10 @@ func InitStorage(cfg *app.Config) {
 
 func AddTradingSystem(ts *TradingSystem) error {
 	sId := strconv.Itoa(int(ts.Id))
-	path:= folder +"/"+ ts.Username +"/"+ sId +"/"
+	path := folder + "/" + ts.Username + "/" + sId + "/"
 
 	for _, dir := range Dirs {
-		err := os.MkdirAll(path + dir, 0700)
+		err := os.MkdirAll(path+dir, 0700)
 		if err != nil {
 			return err
 		}
@@ -104,7 +105,7 @@ func UpdateTradingSystem(ts *TradingSystem) error {
 
 func DeleteTradingSystem(id uint, username string) error {
 	sId := strconv.Itoa(int(id))
-	return os.RemoveAll(folder +"/"+ username +"/"+ sId)
+	return os.RemoveAll(folder + "/" + username + "/" + sId)
 }
 
 //=============================================================================
@@ -118,7 +119,7 @@ func GetEquityChartTypes(username string, id uint) ([]string, error) {
 		strconv.Itoa(int(id)),
 	}
 
-	files,err := getFiles(path...)
+	files, err := getFiles(path...)
 
 	if err != nil {
 		return nil, err
@@ -137,7 +138,7 @@ func GetEquityChartTypes(username string, id uint) ([]string, error) {
 
 //=============================================================================
 
-func ReadEquityChart(username string, id uint, chartType string) ([]byte,error) {
+func ReadEquityChart(username string, id uint, chartType string) ([]byte, error) {
 	path := []string{
 		folder,
 		username,
@@ -279,13 +280,13 @@ func readFile(path ...string) ([]byte, error) {
 
 func writeFile(data []byte, path ...string) error {
 	file := filepath.Join(path...)
-	err  := os.WriteFile(file +".temp", data, 0600)
+	err := os.WriteFile(file+".temp", data, 0600)
 
 	if err != nil {
 		return err
 	}
 
-	_,err = os.Stat(file)
+	_, err = os.Stat(file)
 
 	if err == nil {
 		err = os.Remove(file)
@@ -294,7 +295,7 @@ func writeFile(data []byte, path ...string) error {
 		}
 	}
 
-	return os.Rename(file +".temp", file)
+	return os.Rename(file+".temp", file)
 }
 
 //=============================================================================
@@ -307,19 +308,19 @@ func deleteFile(path ...string) error {
 //=============================================================================
 
 func buildEquityChartName(chartType string) string {
-	return chartType +"-"+ EquityChart
+	return chartType + "-" + EquityChart
 }
 
 //=============================================================================
 
 func isEquityChartName(fileName string) bool {
-	return strings.HasSuffix(fileName, "-"+ EquityChart)
+	return strings.HasSuffix(fileName, "-"+EquityChart)
 }
 
 //=============================================================================
 
 func getChartType(fileName string) string {
-	index := strings.Index(fileName, "-"+ EquityChart)
+	index := strings.Index(fileName, "-"+EquityChart)
 	return fileName[0:index]
 }
 
