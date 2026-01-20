@@ -6,7 +6,7 @@ authentication:
   authority: https://algotiqa-server:8443/auth/realms/algotiqa
 messaging:
   address: localhost:8450
-  username: rabbit-admin
-  password: rabbit.admin
+  username: admin
+  password: admin
 storage:
   folder: storage
