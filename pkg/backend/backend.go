@@ -54,7 +54,7 @@ var Dirs = []string{Code, Image, Report}
 
 //=============================================================================
 
-var folder string
+var folder         string
 var defEquityChart []byte
 
 //=============================================================================
@@ -80,7 +80,7 @@ func InitStorage(cfg *app.Config) {
 //=============================================================================
 
 func AddTradingSystem(ts *TradingSystem) error {
-	sId := strconv.Itoa(int(ts.Id))
+	sId  := strconv.Itoa(int(ts.Id))
 	path := folder + "/" + ts.Username + "/" + sId + "/"
 
 	for _, dir := range Dirs {
@@ -281,16 +281,6 @@ func CreateBackup(username string, id uint) ([]byte, error) {
 			return err
 		}
 
-		if info.IsDir() {
-			return nil
-		}
-
-		file, err := os.Open(path)
-		if err != nil {
-			return err
-		}
-		defer file.Close()
-
 		//--- Create a path inside the ZIP that is relative to the base directory
 		//--- Otherwise, the ZIP will contain the full absolute path of your local machine
 
@@ -298,6 +288,21 @@ func CreateBackup(username string, id uint) ([]byte, error) {
 		if err != nil {
 			return err
 		}
+
+		if info.IsDir() {
+			header := &zip.FileHeader{
+				Name: relPath +"/",
+			}
+
+			_, err = arc.CreateHeader(header)
+			return err
+		}
+
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
 
 		//--- Create the writer for this specific file inside the archive
 
@@ -317,6 +322,62 @@ func CreateBackup(username string, id uint) ([]byte, error) {
 
 	_=arc.Close()
 	return buf.Bytes(), nil
+}
+
+//=============================================================================
+
+func RestoreBackup(username string, id uint, data []byte) error {
+	path := []string{
+		folder,
+		username,
+		strconv.Itoa(int(id)),
+	}
+
+	dir := filepath.Join(path...)
+
+	reader, err := zip.NewReader(bytes.NewReader(data), int64(len(data)))
+	if err != nil {
+		return err
+	}
+
+	for _, file := range reader.File {
+		filePath := dir +"/"+ file.Name
+
+		if file.FileInfo().IsDir() {
+			err = os.MkdirAll(filePath, 0700)
+			if err != nil {
+				return err
+			}
+			continue
+		}
+
+		//err = os.MkdirAll(filepath.Dir(filePath), 0700)
+		//if err != nil {
+		//	return err
+		//}
+
+		source, errS := file.Open()
+		if errS != nil {
+			return errS
+		}
+
+		destin, errD := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+		if errD != nil {
+			return errD
+		}
+
+		_, err = io.Copy(destin, source)
+		if err == nil {
+			err = destin.Close()
+		}
+		_ = source.Close()
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 //=============================================================================

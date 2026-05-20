@@ -26,9 +26,10 @@ package inventory
 
 import (
 	"encoding/json"
+	"log/slog"
+
 	"github.com/algotiqa/core/msg"
 	"github.com/algotiqa/storage-manager/pkg/backend"
-	"log/slog"
 )
 
 //=============================================================================
@@ -72,11 +73,18 @@ func addTradingSystem(tsm *TradingSystemMessage) bool {
 	slog.Info("addTradingSystem: New trading system received", "id", tsm.TradingSystem.Id, "name", tsm.TradingSystem.Name)
 
 	ts := &backend.TradingSystem{
-		Id:       tsm.TradingSystem.Id,
+		Id      : tsm.TradingSystem.Id,
 		Username: tsm.TradingSystem.Username,
-		Name:     tsm.TradingSystem.Name,
+		Name    : tsm.TradingSystem.Name,
 	}
-	err := backend.AddTradingSystem(ts)
+
+	var err error
+
+	if len(tsm.StoragePack) == 0 {
+		err = backend.AddTradingSystem(ts)
+	} else {
+		err = backend.RestoreBackup(ts.Username, ts.Id, tsm.StoragePack)
+	}
 
 	if err != nil {
 		slog.Error("addTradingSystem: Cannot add the trading system", "id", tsm.TradingSystem.Id, "error", err.Error())

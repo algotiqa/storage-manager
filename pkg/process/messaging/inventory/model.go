@@ -50,6 +50,8 @@ type TradingSystem struct {
 
 type TradingSystemMessage struct {
 	TradingSystem  TradingSystem  `json:"tradingSystem"`
+	PortfolioPack  []byte         `json:"portfolioPack"`
+	StoragePack    []byte         `json:"storagePack"`
 }
 
 //=============================================================================
