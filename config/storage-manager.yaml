@@ -1,12 +1,17 @@
 application:
   bindAddress: :8452
-  production: false
-  debug: false
+  production : false
+  debug      : false
 authentication:
   authority: https://algotiqa-server:8443/auth/realms/algotiqa
 messaging:
-  address: localhost:8450
+  address : localhost:8450
   username: admin
   password: admin
+  journal:
+    directory      : .
+    queueSize      : 1000
+    compactMessages: 1000
+    dbSpoolInterval: 0
 storage:
   folder: storage

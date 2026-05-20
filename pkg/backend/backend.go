@@ -25,7 +25,10 @@ THE SOFTWARE.
 package backend
 
 import (
+	"archive/zip"
+	"bytes"
 	"encoding/json"
+	"io"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -256,6 +259,64 @@ func SetTradingSystemInfo(ts *TradingSystem) error {
 	}
 
 	return writeFile(data, path...)
+}
+
+//=============================================================================
+
+func CreateBackup(username string, id uint) ([]byte, error) {
+	path := []string{
+		folder,
+		username,
+		strconv.Itoa(int(id)),
+	}
+
+	dir := filepath.Join(path...)
+	buf := new(bytes.Buffer)
+	arc := zip.NewWriter(buf)
+
+	defer arc.Close()
+
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		//--- Create a path inside the ZIP that is relative to the base directory
+		//--- Otherwise, the ZIP will contain the full absolute path of your local machine
+
+		relPath, err := filepath.Rel(dir, path)
+		if err != nil {
+			return err
+		}
+
+		//--- Create the writer for this specific file inside the archive
+
+		writer, err := arc.Create(relPath)
+		if err != nil {
+			return err
+		}
+
+		//--- Stream the file content into the zip writer
+		_, err = io.Copy(writer, file)
+		return err
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	_=arc.Close()
+	return buf.Bytes(), nil
 }
 
 //=============================================================================

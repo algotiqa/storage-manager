@@ -25,6 +25,11 @@ THE SOFTWARE.
 package business
 
 import (
+	"archive/zip"
+	"bytes"
+	"io"
+	"strconv"
+
 	"github.com/algotiqa/core/auth"
 	"github.com/algotiqa/storage-manager/pkg/backend"
 )
@@ -121,6 +126,46 @@ func DeleteEquityCharts(c *auth.Context, id uint, r *EquityRequest) error {
 		c.Log.Error("DeleteEquityCharts: Equity charts deleted", "id", id, "username", r.Username)
 	}
 
+	return err
+}
+
+//=============================================================================
+
+func ExportTradingSystems(c *auth.Context, ids []uint) ([]byte, error){
+	c.Log.Info("ExportTradingSystems: Exporting trading systems", "count", len(ids))
+
+	buf       := new(bytes.Buffer)
+	zipWriter := zip.NewWriter(buf)
+
+	for _, id := range ids {
+		data,err := backend.CreateBackup(c.Session.Username, id)
+		if err != nil {
+			_=zipWriter.Close()
+			return nil, err
+		}
+
+		filename := strconv.FormatUint(uint64(id), 10) +".zip"
+		err = writeData(zipWriter, filename, data)
+		if err != nil {
+			_=zipWriter.Close()
+			return nil, err
+		}
+	}
+
+	_=zipWriter.Close()
+	return buf.Bytes(), nil
+}
+
+//=============================================================================
+
+func writeData(zipWriter *zip.Writer, filename string, data []byte) error {
+	writer, err := zipWriter.Create(filename)
+	if err != nil {
+		return err
+	}
+
+	buffer := bytes.NewBuffer(data)
+	_, err = io.Copy(writer, buffer)
 	return err
 }
 

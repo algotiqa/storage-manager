@@ -26,6 +26,7 @@ package service
 
 import (
 	"github.com/algotiqa/core/auth"
+	"github.com/algotiqa/core/req"
 	"github.com/algotiqa/storage-manager/pkg/business"
 )
 
@@ -118,6 +119,26 @@ func deleteEquityCharts(c *auth.Context) {
 			err = business.DeleteEquityCharts(c, tsId, equReq)
 			if err == nil {
 				_ = c.ReturnObject("")
+				return
+			}
+		}
+	}
+
+	c.ReturnError(err)
+}
+
+//=============================================================================
+
+func exportTradingSystems(c *auth.Context) {
+	ids,err := c.GetIdsFromUrl()
+	if err == nil {
+		if len(ids) == 0 {
+			err = req.NewBadRequestError("Parameter 'id' is missing or empty")
+		} else {
+			var res []byte
+			res,err = business.ExportTradingSystems(c, ids)
+			if err == nil {
+				_=c.ReturnData("application/zip", res)
 				return
 			}
 		}

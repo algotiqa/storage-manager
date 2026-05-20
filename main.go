@@ -25,6 +25,8 @@ THE SOFTWARE.
 package main
 
 import (
+	"log/slog"
+
 	"github.com/algotiqa/core/boot"
 	"github.com/algotiqa/core/msg"
 	"github.com/algotiqa/core/req"
@@ -32,7 +34,6 @@ import (
 	"github.com/algotiqa/storage-manager/pkg/backend"
 	"github.com/algotiqa/storage-manager/pkg/process/messaging/inventory"
 	"github.com/algotiqa/storage-manager/pkg/service"
-	"log/slog"
 )
 
 //=============================================================================
@@ -58,7 +59,7 @@ func main() {
 
 func initClients() {
 	slog.Info("Initializing clients...")
-	req.AddClient("bf", "ca.crt", "server.crt", "server.key")
+	req.AddDefaultClient("ca.crt", "server.crt", "server.key")
 }
 
 //=============================================================================
