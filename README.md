@@ -2,7 +2,8 @@
 
 Microservice to manage file-based data (text, images, PDFs and more).
 
-**Note:** the main documentation of the platform is located [HERE](https://github.com/algotiqa/docs).
+> [!TIP]
+> The main documentation of the platform is located [HERE](https://github.com/algotiqa/docs).
 
 
 ## License
